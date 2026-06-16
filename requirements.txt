@@ -3,3 +3,5 @@ google-genai
 pydantic
 thefuzz
 pillow
+svglib
+reportlab
