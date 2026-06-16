@@ -67,22 +67,15 @@ with col2:
         if uploaded_file and st.button("Run Automated Compliance Check", type="primary", use_container_width=True):
             with st.spinner("Analyzing..."):
                 try:
-                    # Robust SVG-to-PNG conversion logic
+                    # Reverted to original lean implementation
                     if uploaded_file.name.endswith('.svg'):
-                        try:
-                            with tempfile.NamedTemporaryFile(delete=False, suffix=".svg") as f:
-                                f.write(uploaded_file.getvalue())
-                                drawing = svg2rlg(f.name)
-                                if drawing is None:
-                                    st.error("Rendering Error: The SVG contains complex features (filters/masks) the server cannot process.")
-                                    st.info("Tip: Open the file in Inkscape, select all, and use 'Path > Object to Path' before saving.")
-                                    st.stop()
-                                png_io = io.BytesIO()
-                                renderPM.drawToFile(drawing, png_io, fmt="PNG")
-                                img = Image.open(png_io)
-                        except Exception as e:
-                            st.error(f"SVG Conversion Failed: {e}")
-                            st.stop()
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".svg") as f:
+                            f.write(uploaded_file.getvalue())
+                        
+                        drawing = svg2rlg(f.name)
+                        png_io = io.BytesIO()
+                        renderPM.drawToFile(drawing, png_io, fmt="PNG")
+                        img = Image.open(png_io)
                     else:
                         img = Image.open(uploaded_file)
                     
