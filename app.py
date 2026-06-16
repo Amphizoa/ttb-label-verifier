@@ -15,15 +15,9 @@ st.set_page_config(page_title="Compliance Portal (Demo)", layout="wide")
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Public+Sans:wght@400;600&display=swap');
-    
-    /* Background for the 'enterprise' look */
     .stApp { background-color: #f7f7f7; }
-    
-    /* Typographic Hierarchy */
     h1, h2, h3 { font-family: 'Georgia', serif !important; color: #003366 !important; }
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
-    
-    /* Grid structure: Flat, thin-bordered cards */
     div[data-testid="stVerticalBlockBorderWrapper"] { 
         border-radius: 0px !important; 
         border: 1px solid #c0c0c0 !important; 
@@ -46,6 +40,7 @@ col1, col2 = st.columns([1, 1])
 with col1:
     with st.container(border=True):
         st.markdown("### 1. Primary Identifiers")
+        st.info("Enter the information exactly as it appears on your official application form.")
         app_brand = st.text_input("Brand Name")
         app_type = st.text_input("Class/Type Designation")
         app_bottler = st.text_input("Bottler/Importer Address")
@@ -54,6 +49,7 @@ with col1:
 with col2:
     with st.container(border=True):
         st.markdown("### 2. Supplementary Data")
+        st.info("Include all auxiliary label details required for specific commodity compliance.")
         app_abv = st.text_input("Alcohol Content (ABV)")
         app_net = st.text_input("Net Contents")
         app_vintage = st.text_input("Vintage Date (Optional)")
@@ -61,6 +57,7 @@ with col2:
 
 st.markdown("---")
 st.subheader("3. Upload Label Artwork")
+st.info("Upload the high-resolution label file (PNG, JPG, or SVG) that corresponds to the data entered above.")
 uploaded_file = st.file_uploader("Choose a label image", type=["png", "jpg", "jpeg", "svg"])
 
 if uploaded_file:
@@ -95,6 +92,8 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
             audit_results = verify_compliance({k: v for k, v in form_data.items() if v.strip() != ""}, extracted_data)
             
             # Result Display
+            st.markdown("---")
+            st.markdown("### Audit Findings")
             st.info("Verified against 27 CFR Part 4 regulatory requirements.")
             for element, data in audit_results.items():
                 with st.container(border=True):
