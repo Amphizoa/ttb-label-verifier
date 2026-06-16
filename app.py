@@ -1,3 +1,5 @@
+Python
+
 import streamlit as st
 from PIL import Image
 import io
@@ -11,19 +13,22 @@ from engine import analyze_label_image, verify_compliance
 # 1. Page Configuration
 st.set_page_config(page_title="TTB Label Verifier (Demo)", layout="wide")
 
+# 2. Base64 Encoded Federal Reserve Logo (Self-contained)
+fed_logo_b64 = "iVBORw0KGgoAAAANSUhEUgAAAlgAAACCCAYAAAC9/4+2AAAACXBIWXMAAAsTAAALEwEAmpwYAAAKTWlDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNfSFNhHMb/nXPuvrV0U1o6W0pISx8p0vLhN1+aQZt0lB4a6mXk3H2ZfQd31713v9f09Pz6P4G+g09+9P55P8C8nS6+7+15HhM5j4r/n+f9+XwHAPw12QIAaC8EIMgYhBw0oE6D64pBv/D4T/h32H+DqgqW2E7r43X3x5x6O6B55D6f5Z6Qv36+u599oKAB0HwGgQ1sIAeGvOBAwF6JADxY0H2QpP1k7hO9pW0s5Z68vJ9wLg6R6Wb2Q+oH18N5e2l/uD7QPAx4K9rWjNf1c6o1Y4u2B4P0uW0Z1i00G2y18j3QW4+1nLhN9Z5Fq5P6/gZ+yBqXyM1/5wF9C/n38s3yG/uD+f5sV88G04Z5JcWnC/JvJ8eT14X+U9Fm0G0z7Z+PzM1YVz9Jm96bF91G3e+v+u9oYp638J/pB0O1jO8t5G/6/gW0G99i898r446gH5O9B0vV0O5Xz4g98s/8i8985y8h91Dqg5DqgJ13+P8v4034b7f4A==" # Note: Use your own full logo string here
+
 # 2. Inject Official Federal Reserve-Style Header
-st.markdown("""
+st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Public+Sans:wght@400;600&display=swap');
-    html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
-    h1 { font-family: 'Merriweather', serif !important; }
-    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #dcdcdc; }
+    html, body, [class*="css"] {{ font-family: 'Public Sans', sans-serif !important; }}
+    h1 {{ font-family: 'Merriweather', serif !important; }}
+    div[data-testid="stVerticalBlockBorderWrapper"] {{ border-radius: 0px !important; border: 1px solid #dcdcdc; }}
 </style>
 
 <div style='background-color: #003366; color: #ffffff; padding: 20px; border-bottom: 3px solid #cc0000; display: flex; align-items: center;'>
-    <img src="https://www.federalreserve.gov/assets/homepage/images/logo-fed-reserve.png" 
+    <img src="data:image/png;base64,{fed_logo_b64}" 
          alt="Federal Reserve Logo" 
-         style="width: 250px; margin-right: 30px;">
+         style="width: 200px; margin-right: 30px;">
     <div>
         <h1 style='margin:0; color: #ffffff; font-size: 24px;'>Board of Governors of the Federal Reserve System</h1>
         <p style='margin:0; font-size: 14px; color: #d1d1d1; margin-top: 5px;'>Compliance & Regulatory Discrepancy Detection Portal</p>
