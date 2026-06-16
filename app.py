@@ -15,26 +15,23 @@ st.set_page_config(page_title="TTB Compliance Portal", layout="wide")
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
-    
-    /* Global Styles */
     .stApp { background-color: #f7f7f7; }
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
     
-    /* Branding Elements */
-    .official-banner { background-color: #f0f0f0; color: #1b1b1b; padding: 5px 20px; font-size: 12px; border-bottom: 1px solid #aeb0b5; }
+    .official-banner { background-color: #f0f0f0; color: #1b1b1b; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #aeb0b5; display: flex; align-items: center; }
     .ttb-header { background-color: #003366; color: white; padding: 20px; display: flex; align-items: center; }
-    .nav-bar { background-color: #004a80; color: white; padding: 10px 20px; font-weight: bold; font-size: 14px; }
-    .ttb-footer { background-color: #003366; color: white; padding: 40px 20px; margin-top: 50px; border-top: 5px solid #005ea2; font-size: 14px; }
+    .nav-bar { background-color: #004a80; color: white; padding: 12px 20px; font-weight: bold; font-size: 14px; }
+    .ttb-footer { background-color: #003366; color: white; padding: 40px 20px; margin-top: 50px; border-top: 5px solid #005ea2; font-size: 13px; text-align: center; }
     
-    /* Form Containers */
-    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #aeb0b5 !important; background-color: #ffffff; padding: 10px; }
+    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #aeb0b5 !important; background-color: #ffffff; padding: 15px; }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. Header Section
+# 3. Header Section (Using provided custom flag)
 st.markdown("""
 <div class="official-banner">
-    🇺🇸 An official website of the United States government
+    <img src="https://i.imgur.com/kS9Z0aY.png" width="25" style="margin-right: 10px;">
+    An official website of the United States government
 </div>
 <div class="ttb-header">
     <img src="https://www.ttb.gov/themes/custom/ttb/assets/img/TTB_logo_web.svg" width="300">
@@ -100,15 +97,6 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
 # 6. Official Footer
 st.markdown("""
 <div class="ttb-footer">
-    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px;">
-        <div><strong>Filing & Payments</strong><br>Permits Online<br>COLAs Online<br>Tax Returns</div>
-        <div><strong>About TTB</strong><br>Contact Us<br>Offices<br>Careers</div>
-        <div><strong>Additional Information</strong><br>Open Government<br>Plain Language</div>
-        <div><strong>Additional Resources</strong><br>FOIA<br>Report Fraud</div>
-        <div><strong>Other Govt Sites</strong><br>Treasury.gov<br>USA.gov</div>
-        <div><strong>Language Links</strong><br>En Español<br>Français</div>
-    </div>
-    <hr style="border: 0.5px solid #005ea2; margin: 20px 0;">
-    <div>Accessibility  |  Privacy Policy</div>
-</div>
-""", unsafe_allow_html=True)
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg/100px-US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg.png" width="80" style="margin-bottom: 20px;">
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 40px; text-align: left; max-width: 1000px; margin: 0 auto;">
+        <div><strong>Filing & Payments</strong><br>Permits Online<br>COLAs Online<br>
