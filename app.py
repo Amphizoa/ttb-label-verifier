@@ -9,24 +9,61 @@ st.set_page_config(page_title="Alcohol Label Verifier", layout="wide")
 
 # Main Header - Clean and simple
 st.title("Alcohol Label Verifier")
+st.markdown("Automated discrepancy detection between application records and bottle labels.")
+st.write("") 
 
 # 2. Layout: Split Screen with Material-style "Cards"
-# Adjusted the ratio slightly so the results card has more horizontal space
 col1, col2 = st.columns([1, 1.5]) 
 
 with col1:
     # MATERIAL CARD 1: Input Data
     with st.container(border=True):
-        st.subheader("1. Government Record Input")
-        st.caption("Simulated government record data.")
+        st.subheader("1. Government Label Data")
         
-       # Form Data inputs (Empty by default so you can enter fresh data)
-        app_brand = st.text_input("Brand Name", "")
-        app_type = st.text_input("Class/Type Designation", "")
-        app_abv = st.text_input("Alcohol Content (ABV)", "")
-        app_net = st.text_input("Net Contents", "")
+        st.info(
+            "**Instructions:** Fill out the fields below exactly as they appear on your official "
+            "COLA (Certification/Exemption of Label/Bottle Approval) application form. "
+            "Once completed, upload the corresponding label artwork below to run the audit."
+        )
         
-        st.divider() # Clean material-style subtle line separator
+        # Form Data inputs (Placeholders removed)
+        app_brand = st.text_input(
+            "Brand Name", 
+            help="Enter the brand name or producer exactly as written on the application."
+        )
+        app_fanciful = st.text_input(
+            "Fanciful Name (Optional)", 
+            help="An optional, descriptive name added to the label."
+        )
+        app_type = st.text_input(
+            "Class/Type Designation", 
+            help="e.g., 'Kentucky Straight Bourbon Whiskey', 'Red Wine', etc."
+        )
+        app_abv = st.text_input(
+            "Alcohol Content (ABV)", 
+            help="e.g., '45% Alc./Vol.' or '13.5% by Vol.'"
+        )
+        app_net = st.text_input(
+            "Net Contents", 
+            help="e.g., '750 mL' or '12 fl. oz.'"
+        )
+        app_bottler = st.text_input(
+            "Name & Address of Bottler/Importer", 
+            help="The mandated name and address statement."
+        )
+        
+        # Expandable section for Wine-specific fields to keep the UI clean
+        with st.expander("Additional Fields (Wine Specific)"):
+            app_appellation = st.text_input(
+                "Appellation of Origin", 
+                help="Required for certain wines, indicates where the grapes were grown."
+            )
+            app_vintage = st.text_input(
+                "Vintage Date", 
+                help="The year the grapes were harvested."
+            )
+        
+        st.divider() 
         
         st.subheader("2. Upload Label Artwork")
         uploaded_file = st.file_uploader("Choose a label image", type=["png", "jpg", "jpeg"])
@@ -41,38 +78,40 @@ with col2:
         st.caption("AI-powered discrepancy analysis.")
         
         if uploaded_file:
-            # A massive, obvious primary button (No hunting for buttons!)
-            if st.button(" Run Automated Compliance Check", type="primary", use_container_width=True):
+            if st.button("Run Automated Compliance Check", type="primary", use_container_width=True):
                 
                 with st.spinner("Analyzing image features and running logic rules... (Expected: < 5s)"):
                     try:
-                        # Convert the uploaded file into an Image object for Gemini
                         img = Image.open(uploaded_file)
                         
                         # Step 1: Have the AI read the label
                         extracted_data = analyze_label_image(img)
                         
-                        # Step 2: Bundle the form data from the left column
+                        # Step 2: Bundle ALL the form data from the left column
                         form_data = {
                             "brand_name": app_brand,
+                            "fanciful_name": app_fanciful,
                             "class_type": app_type,
                             "abv": app_abv,
-                            "net_contents": app_net
+                            "net_contents": app_net,
+                            "bottler_info": app_bottler,
+                            "appellation": app_appellation,
+                            "vintage": app_vintage
                         }
+                        
+                        # Filter out empty fields so the UI doesn't clutter with blank comparisons
+                        form_data = {k: v for k, v in form_data.items() if v.strip() != ""}
                         
                         # Step 3: Run the compliance engine to compare them
                         audit_results = verify_compliance(form_data, extracted_data)
                         
-                        st.write("") # Vertical spacing before results
+                        st.write("") 
                         
                         # Step 4: Display the Results beautifully in Material Sub-Cards
                         for element, data in audit_results.items():
-                            
-                            # Wrapping each result in its own elevated card for ultimate readability
                             with st.container(border=True):
                                 st.markdown(f"#### {element.replace('_', ' ').title()}")
                                 
-                                # Clean Color-Coded Badges based on status
                                 if "PASS" in data["status"]:
                                     st.success(f"**STATUS: {data['status']}** ({data['confidence']})")
                                 elif "REVIEW" in data["status"]:
@@ -80,7 +119,6 @@ with col2:
                                 else:
                                     st.error(f"**STATUS: {data['status']}** ({data['confidence']})")
                                     
-                                # Put the expected vs extracted data side-by-side
                                 metric_c1, metric_c2 = st.columns(2)
                                 metric_c1.metric("Expected (Form Value)", data["form"])
                                 metric_c2.metric("Extracted (From Label)", data["label"])
@@ -89,4 +127,4 @@ with col2:
                         st.error(f"An error occurred during verification processing: {e}")
                         st.info("Check your terminal to ensure your API key is correct and you have internet access.")
         else:
-            st.info(" Please input label data manually from the database and upload a label image on the left to run the compliance engine.")
+            st.info("Please enter the application data and upload a label image on the left to run the compliance engine.")
