@@ -1,0 +1,17 @@
+Ini, TOML
+
+[theme]
+# USWDS Primary Navy Blue
+primaryColor = "#005ea2"
+
+# Stark white background
+backgroundColor = "#ffffff"
+
+# USWDS Base Lightest (for sidebars and secondary containers)
+secondaryBackgroundColor = "#f1f1f1"
+
+# High-contrast dark text
+textColor = "#1b1b1b"
+
+# Clean, official typography
+font = "sans serif"
