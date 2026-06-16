@@ -33,9 +33,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 4. Header Section
-st.markdown(f"""
+st.markdown("""
 <div class="official-banner">
-    <img src="data:image/png;base64,{flag_b64}" width="25" style="margin-right: 10px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/25px-Flag_of_the_United_States.svg.png" style="margin-right: 10px;">
     An official website of the United States government
 </div>
 <div class="ttb-header">
@@ -47,8 +47,6 @@ st.markdown(f"""
     <div>🔍 SEARCH</div>
 </div>
 """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
 
 # 5. Main Application Form
 col1, col2 = st.columns([1, 1])
