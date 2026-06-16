@@ -14,35 +14,28 @@ st.set_page_config(page_title="TTB Label Verifier (Demo)", layout="wide")
 # 2. Inject Official Government Header & Test Disclaimer
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Public+Sans:wght@400;600&display=swap');
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
-    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; }
+    h1 { font-family: 'Merriweather', serif !important; }
+    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #dcdcdc; }
 </style>
 
-<div style='background-color: #f0f0f0; color: #1b1b1b; padding: 4px 20px; font-size: 12px; display: flex; align-items: center; border-bottom: 1px solid #dfe1e2;'>
-    <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" width="16" height="11" style="margin-right: 8px;" alt="US Flag">
-    <span>An official demonstration prototype of the United States Government</span>
-</div>
+<div style='background-color: #003366; color: #ffffff; padding: 20px; border-bottom: 3px solid #cc0000; display: flex; align-items: center;'>
+    
+    <img src="https://www.federalreserve.gov/assets/homepage/images/logo-fed-reserve.png" 
+         alt="Federal Reserve Logo" 
+         style="width: 200px; margin-right: 30px; filter: brightness(0) invert(1);">
 
-<div style='background-color: #fac22b; color: #1b1b1b; padding: 10px 20px; font-size: 14px; font-weight: bold; text-align: center; border-bottom: 2px solid #1a1a1a;'>
-    DEMONSTRATION PROTOTYPE: Built solely for technical interview assessment. Not an official TTB tool.
-</div>
-
-<div style='background-color: #005ea2; color: #ffffff; padding: 25px 20px; margin-bottom: 25px; border-bottom: 4px solid #1a1a1a; overflow: hidden;'>
-    <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="float:left; margin-right: 20px; margin-top: 2px;">
-       <path d="M50 5 L10 25 L10 60 C10 80 50 95 50 95 C50 95 90 80 90 60 L90 25 Z" fill="none" stroke="#ffffff" stroke-width="6" stroke-linejoin="round"/>
-       <circle cx="50" cy="45" r="18" fill="none" stroke="#ffffff" stroke-width="4"/>
-       <rect x="35" y="70" width="30" height="4" fill="#ffffff"/>
-       <path d="M50 27 L50 63" stroke="#ffffff" stroke-width="4"/>
-       <path d="M32 45 L68 45" stroke="#ffffff" stroke-width="4"/>
-    </svg>
-    <div style="float: left;">
-        <h1 style='margin:0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
-        <p style='margin:0; font-size: 16px; color: #e1f3f8; margin-top: 5px; font-weight: 400;'>Automated COLA Discrepancy Detection Engine (Technical Demo)</p>
+    <div>
+        <h1 style='margin:0; color: #ffffff; font-size: 24px;'>Board of Governors of the Federal Reserve System</h1>
+        <p style='margin:0; font-size: 14px; color: #d1d1d1; margin-top: 5px;'>Compliance & Regulatory Discrepancy Detection Portal</p>
     </div>
 </div>
-""", unsafe_allow_html=True)
 
+<div style='background-color: #fff8e1; color: #856404; padding: 10px 20px; font-size: 13px; text-align: center; border-bottom: 1px solid #ffeeba;'>
+    <strong>TEST CASE ONLY:</strong> Built for technical assessment purposes. Not an official regulatory interface.
+</div>
+""", unsafe_allow_html=True)
 # 3. Layout: Split Screen
 col1, col2 = st.columns([1, 1.5]) 
 
