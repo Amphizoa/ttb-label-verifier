@@ -11,7 +11,7 @@ from engine import analyze_label_image, verify_compliance
 # 1. Page Configuration
 st.set_page_config(page_title="TTB Label Compliance Engine", layout="wide")
 
-# 2. Inject Official TTB Header with the Direct SVG
+# 2. Inject Official TTB Header with the Official Seal
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
@@ -30,14 +30,13 @@ st.markdown("""
     <span>An official website of the <strong>United States government</strong></span>
 </div>
 
-<div style='background-color: #005ea2; color: #ffffff; padding: 25px 20px; border-bottom: 4px solid #1a1a1a; display: flex; align-items: center;'>
-    <img src="https://www.ttb.gov/themes/custom/ttb/assets/img/TTB_logo_web.svg" 
-         alt="TTB Logo" 
-         referrerpolicy="no-referrer"
-         style="height: 60px; margin-right: 20px; background: white; padding: 5px; border-radius: 2px;">
+<div style='background-color: #005ea2; color: #ffffff; padding: 20px; border-bottom: 4px solid #1a1a1a; display: flex; align-items: center;'>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg/250px-US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg.png" 
+         alt="TTB Official Seal" 
+         style="height: 70px; margin-right: 20px; background-color: white; padding: 5px; border-radius: 50%; border: 2px solid #ffffff;">
     <div>
-        <h1 style='margin:0; font-size: 28px; font-weight: 700;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
-        <p style='margin:0; font-size: 16px; margin-top: 5px; color: #ffffff;'>COLA Compliance Discrepancy Detection Engine</p>
+        <h1 style='margin:0; font-size: 26px; font-weight: 700;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
+        <p style='margin:0; font-size: 15px; margin-top: 5px; color: #ffffff; opacity: 0.9;'>COLA Compliance Discrepancy Detection Engine</p>
     </div>
 </div>
 
