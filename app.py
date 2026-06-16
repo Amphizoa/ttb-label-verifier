@@ -23,7 +23,7 @@ st.markdown("""
 <div style='background-color: #003366; color: #ffffff; padding: 20px; border-bottom: 3px solid #cc0000; display: flex; align-items: center;'>
     <img src="https://www.federalreserve.gov/assets/homepage/images/logo-fed-reserve.png" 
          alt="Federal Reserve Logo" 
-         style="width: 200px; margin-right: 30px; filter: brightness(0) invert(1);">
+         style="width: 250px; margin-right: 30px;">
     <div>
         <h1 style='margin:0; color: #ffffff; font-size: 24px;'>Board of Governors of the Federal Reserve System</h1>
         <p style='margin:0; font-size: 14px; color: #d1d1d1; margin-top: 5px;'>Compliance & Regulatory Discrepancy Detection Portal</p>
