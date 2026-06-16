@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 550" width="350" height="550">
+  <rect width="100%" height="100%" fill="#1A3636"/>
+  <rect x="15" y="15" width="320" height="520" fill="none" stroke="#D3B160" stroke-width="2"/>
+  
+  <text x="175" y="80" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#F0ECCF" text-anchor="middle" letter-spacing="4">HOP HORIZON</text>
+  <text x="175" y="110" font-family="Arial, sans-serif" font-size="14" fill="#D3B160" text-anchor="middle" letter-spacing="2">BREWING CO.</text>
+  
+  <text x="175" y="180" font-family="Georgia, serif" font-size="28" font-style="italic" fill="#F0ECCF" text-anchor="middle">Coastal Fog</text>
+  
+  <text x="175" y="240" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#D3B160" text-anchor="middle" letter-spacing="1">INDIA PALE ALE</text>
+  
+  <text x="175" y="300" font-family="Arial, sans-serif" font-size="14" fill="#F0ECCF" text-anchor="middle">7.2% ALC./VOL.  |  1 PINT (16 FL. OZ.)</text>
+  
+  <text x="175" y="350" font-family="Arial, sans-serif" font-size="10" fill="#F0ECCF" text-anchor="middle">BREWED AND CANNED BY</text>
+  <text x="175" y="365" font-family="Arial, sans-serif" font-size="10" fill="#F0ECCF" text-anchor="middle">HOP HORIZON BREWING, SAN DIEGO, CA</text>
+  
+  <rect x="25" y="420" width="300" height="90" fill="none" stroke="#F0ECCF" stroke-width="1"/>
+  <text x="30" y="435" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#F0ECCF">GOVERNMENT WARNING:</text>
+  <text x="145" y="435" font-family="Arial, sans-serif" font-size="8" fill="#F0ECCF">(1) According to the Surgeon</text>
+  <text x="30" y="450" font-family="Arial, sans-serif" font-size="8" fill="#F0ECCF">General, women should not drink alcoholic beverages during</text>
+  <text x="30" y="465" font-family="Arial, sans-serif" font-size="8" fill="#F0ECCF">pregnancy because of the risk of birth defects. (2) Consumption</text>
+  <text x="30" y="480" font-family="Arial, sans-serif" font-size="8" fill="#F0ECCF">of alcoholic beverages impairs your ability to drive a car or</text>
+  <text x="30" y="495" font-family="Arial, sans-serif" font-size="8" fill="#F0ECCF">operate machinery, and may cause health problems.</text>
+</svg>
