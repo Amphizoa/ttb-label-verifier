@@ -69,13 +69,19 @@ with col1:
         
         st.divider() 
         
-        st.subheader("2. Upload Label Artwork")
-        # Added 'svg' to the allowed types list
+st.subheader("2. Upload Label Artwork")
         uploaded_file = st.file_uploader("Choose a label image", type=["png", "jpg", "jpeg", "svg"])
         
         if uploaded_file:
-            st.image(uploaded_file, caption="Label Artwork Ready for Review", use_container_width=True)
-
+            # --- NEW FIX: Handle SVG Previews safely ---
+            if uploaded_file.name.endswith('.svg'):
+                # Read the SVG file as text and render it directly using HTML
+                svg_string = uploaded_file.getvalue().decode("utf-8")
+                st.markdown(svg_string, unsafe_allow_html=True)
+                st.caption("Label Artwork Ready for Review")
+            else:
+                # Standard images proceed normally
+                st.image(uploaded_file, caption="Label Artwork Ready for Review", use_container_width=True)
 with col2:
     # MATERIAL CARD 2: Audit Results Engine
     with st.container(border=True):
