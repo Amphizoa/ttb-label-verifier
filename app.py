@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import io
 import tempfile
+import base64
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 
@@ -11,28 +12,30 @@ from engine import analyze_label_image, verify_compliance
 # 1. Page Configuration
 st.set_page_config(page_title="TTB Compliance Portal", layout="wide")
 
-# 2. TTB-Specific Branding & Layout CSS
+# 2. Flag as Base64 (Reliable Rendering)
+flag_b64 = "iVBORw0KGgoAAAANSUhEUgAAAGQAAABACAYAAACy4+8LAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKTWlDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNfSFNhHMb/nXPuvrV0U1o6W0pISx8p0vLhN1+aQZt0lB4a6mXk3H2ZfQd31713v9f09Pz6P4G+g09+9P55P8C8nS6+7+15HhM5j4r/n+f9+XwHAPw12QIAaC8EIMgYhBw0oE6D64pBv/D4T/h32H+DqgqW2E7r43X3x5x6O6B55D6f5Z6Qv36+u599oKAB0HwGgQ1sIAeGvOBAwF6JADxY0H2QpP1k7hO9pW0s5Z68vJ9wLg6R6Wb2Q+oH18N5e2l/uD7QPAx4K9rWjNf1c6o1Y4u2B4P0uW0Z1i00G2y18j3QW4+1nLhN9Z5Fq5P6/gZ+yBqXyM1/5wF9C/n38s3yG/uD+f5sV88G04Z5JcWnC/JvJ8eT14X+U9Fm0G0z7Z+PzM1YVz9Jm96bF91G3e+v+u9oYp638J/pB0O1jO8t5G/6/gW0G99i898r446gH5O9B0vV0O5Xz4g98s/8i8985y8h91Dqg5DqgJ13+P8v4034b7f4A=="
+
+# 3. TTB-Specific Branding & Layout CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
     .stApp { background-color: #f7f7f7; }
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
     
-    /* Header/Footer Styles */
     .official-banner { background-color: #f0f0f0; color: #1b1b1b; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #aeb0b5; display: flex; align-items: center; }
-    .ttb-header { background-color: #003366; color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
-    .nav-bar { background-color: #004a80; color: white; padding: 12px 20px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
+    .ttb-header { background-color: #003366; color: white; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-bar { background-color: #004a80; color: white; padding: 12px 40px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
     .ttb-footer { background-color: #003366; color: white; padding: 40px 20px; margin-top: 50px; border-top: 5px solid #005ea2; font-size: 13px; text-align: center; }
-    .report-fraud-btn { background-color: #2e7d32; color: white; padding: 10px 20px; font-weight: bold; border-radius: 4px; text-decoration: none; }
     
-    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #aeb0b5 !important; background-color: #ffffff; padding: 15px; }
+    .report-fraud-btn { background-color: #2e7d32; color: white !important; padding: 12px 24px; font-weight: bold; border-radius: 4px; text-decoration: none; display: inline-block; }
+    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #aeb0b5 !important; background-color: #ffffff; padding: 20px; }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. Header Section (Includes Flag, Logo, Nav, and Fraud Button)
-st.markdown("""
+# 4. Header Section
+st.markdown(f"""
 <div class="official-banner">
-    <img src="https://i.imgur.com/kS9Z0aY.png" width="25" style="margin-right: 10px;">
+    <img src="data:image/png;base64,{flag_b64}" width="25" style="margin-right: 10px;">
     An official website of the United States government
 </div>
 <div class="ttb-header">
@@ -47,7 +50,7 @@ st.markdown("""
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 4. Main Application Form
+# 5. Main Application Form
 col1, col2 = st.columns([1, 1])
 with col1:
     with st.container(border=True):
@@ -69,7 +72,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 st.subheader("3. Upload Label Artwork")
 uploaded_file = st.file_uploader("Choose a label file", type=["png", "jpg", "jpeg", "svg"])
 
-# 5. Audit Logic
+# 6. Audit Logic
 if uploaded_file and st.button("Run Automated Compliance Check", type="primary"):
     with st.spinner("Executing TTB regulatory audit..."):
         try:
@@ -97,7 +100,7 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
         except Exception as e:
             st.error(f"Audit Error: {e}")
 
-# 6. Official Footer (Includes all sections and icons)
+# 7. Official Footer
 st.markdown("""
 <div class="ttb-footer">
     <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg" width="80" style="margin-bottom: 20px;">
