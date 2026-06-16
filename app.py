@@ -1,5 +1,9 @@
 import streamlit as st
 from PIL import Image
+import io
+import tempfile
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
 
 # Import the brains we built in Phase 2
 from engine import analyze_label_image, verify_compliance
@@ -7,7 +11,7 @@ from engine import analyze_label_image, verify_compliance
 # 1. Page Configuration
 st.set_page_config(page_title="Alcohol Label Verifier", layout="wide")
 
-# Main Header - Clean and simple
+# Main Header
 st.title("Alcohol Label Verifier")
 st.markdown("Automated discrepancy detection between application records and bottle labels.")
 st.write("") 
@@ -26,7 +30,7 @@ with col1:
             "Once completed, upload the corresponding label artwork below to run the audit."
         )
         
-        # Form Data inputs (Placeholders removed)
+        # Form Data inputs
         app_brand = st.text_input(
             "Brand Name", 
             help="Enter the brand name or producer exactly as written on the application."
@@ -52,7 +56,7 @@ with col1:
             help="The mandated name and address statement."
         )
         
-        # Expandable section for Wine-specific fields to keep the UI clean
+        # Expandable section for Wine-specific fields
         with st.expander("Additional Fields (Wine Specific)"):
             app_appellation = st.text_input(
                 "Appellation of Origin", 
@@ -66,7 +70,8 @@ with col1:
         st.divider() 
         
         st.subheader("2. Upload Label Artwork")
-        uploaded_file = st.file_uploader("Choose a label image", type=["png", "jpg", "jpeg"])
+        # Added 'svg' to the allowed types list
+        uploaded_file = st.file_uploader("Choose a label image", type=["png", "jpg", "jpeg", "svg"])
         
         if uploaded_file:
             st.image(uploaded_file, caption="Label Artwork Ready for Review", use_container_width=True)
@@ -82,7 +87,22 @@ with col2:
                 
                 with st.spinner("Analyzing image features and running logic rules... (Expected: < 5s)"):
                     try:
-                        img = Image.open(uploaded_file)
+                        # --- NEW SVG CONVERSION LOGIC ---
+                        if uploaded_file.name.endswith('.svg'):
+                            # Save the uploaded SVG bytes to a temporary file
+                            with tempfile.NamedTemporaryFile(delete=False, suffix=".svg") as f:
+                                f.write(uploaded_file.getvalue())
+                                tmp_path = f.name
+                            
+                            # Convert the SVG file into a PNG in memory
+                            drawing = svg2rlg(tmp_path)
+                            png_io = io.BytesIO()
+                            renderPM.drawToFile(drawing, png_io, fmt="PNG")
+                            img = Image.open(png_io)
+                        else:
+                            # Standard image formats proceed normally
+                            img = Image.open(uploaded_file)
+                        # --------------------------------
                         
                         # Step 1: Have the AI read the label
                         extracted_data = analyze_label_image(img)
