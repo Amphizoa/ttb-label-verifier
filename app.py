@@ -18,26 +18,30 @@ st.markdown("""
     .stApp { background-color: #f7f7f7; }
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
     
+    /* Header/Footer Styles */
     .official-banner { background-color: #f0f0f0; color: #1b1b1b; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #aeb0b5; display: flex; align-items: center; }
-    .ttb-header { background-color: #003366; color: white; padding: 20px; display: flex; align-items: center; }
-    .nav-bar { background-color: #004a80; color: white; padding: 12px 20px; font-weight: bold; font-size: 14px; }
+    .ttb-header { background-color: #003366; color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-bar { background-color: #004a80; color: white; padding: 12px 20px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
     .ttb-footer { background-color: #003366; color: white; padding: 40px 20px; margin-top: 50px; border-top: 5px solid #005ea2; font-size: 13px; text-align: center; }
+    .report-fraud-btn { background-color: #2e7d32; color: white; padding: 10px 20px; font-weight: bold; border-radius: 4px; text-decoration: none; }
     
     div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #aeb0b5 !important; background-color: #ffffff; padding: 15px; }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. Header Section
+# 3. Header Section (Includes Flag, Logo, Nav, and Fraud Button)
 st.markdown("""
 <div class="official-banner">
-    <img src="https://www.cll.com/assets/htmlimages/Version%20of%20the%20American%20Flag.jpg" width="25" style="margin-right: 10px;">
+    <img src="https://i.imgur.com/kS9Z0aY.png" width="25" style="margin-right: 10px;">
     An official website of the United States government
 </div>
 <div class="ttb-header">
     <img src="https://www.ttb.gov/themes/custom/ttb/assets/img/TTB_logo_web.svg" width="300">
+    <a href="#" class="report-fraud-btn">Report Fraud: TTB Tips Online</a>
 </div>
 <div class="nav-bar">
-    WHO WE ARE ▾  |  WHAT WE DO ▾  |  TTB AUDIENCES ▾  |  RESOURCES ▾
+    <div>WHO WE ARE ▾  |  WHAT WE DO ▾  |  TTB AUDIENCES ▾  |  RESOURCES ▾</div>
+    <div>🔍 SEARCH</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -45,7 +49,6 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # 4. Main Application Form
 col1, col2 = st.columns([1, 1])
-
 with col1:
     with st.container(border=True):
         st.markdown("### 1. Government Label Data")
@@ -94,19 +97,22 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
         except Exception as e:
             st.error(f"Audit Error: {e}")
 
-# 6. Official Footer
+# 6. Official Footer (Includes all sections and icons)
 st.markdown("""
 <div class="ttb-footer">
     <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg" width="80" style="margin-bottom: 20px;">
-    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 40px; text-align: left; max-width: 1000px; margin: 0 auto;">
-        <div><strong>Filing & Payments</strong><br>Permits Online<br>COLAs Online<br>Tax Returns</div>
-        <div><strong>About TTB</strong><br>Contact Us<br>Offices<br>Careers</div>
-        <div><strong>Additional Information</strong><br>Open Government<br>Plain Language</div>
-        <div><strong>Additional Resources</strong><br>FOIA<br>Report Fraud</div>
-        <div><strong>Other Govt Sites</strong><br>Treasury.gov<br>USA.gov</div>
-        <div><strong>Language Links</strong><br>En Español<br>Français</div>
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; text-align: left; max-width: 1100px; margin: 0 auto; font-size: 13px;">
+        <div><strong>Filing & Payments</strong><br>Permits Online<br>COLAs Online<br>Tax Returns<br>Permit Applications<br>Submit a Claim Online</div>
+        <div><strong>About TTB</strong><br>Contact Us<br>Offices<br>Careers<br>Regulations</div>
+        <div><strong>Additional Information</strong><br>Open Government<br>Plain Language<br>Information Quality<br>Forms<br>Labeling</div>
+        <div><strong>Additional Resources</strong><br>FOIA<br>Whistleblower Protection<br>Report Fraud</div>
+        <div><strong>Other Govt Sites</strong><br>Dept. of the Treasury<br>USA.gov<br>Data.gov<br>Internal Revenue Service<br>Office of Special Counsel</div>
+        <div><strong>Language Links</strong><br>En Español<br>Français<br>漢語</div>
     </div>
     <hr style="border: 0.5px solid #005ea2; margin: 30px auto; max-width: 1000px;">
-    <div>Accessibility  |  Privacy Policy</div>
+    <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+        <span>Accessibility  |  Privacy Policy</span>
+        <span style="font-size: 20px;">📄 ⋈ ✉️ 📅 ⚙️</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
