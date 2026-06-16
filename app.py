@@ -12,7 +12,7 @@ from engine import analyze_label_image, verify_compliance
 # 1. Page Configuration
 st.set_page_config(page_title="TTB Compliance Portal", layout="wide")
 
-# 2. Styling (USWDS & TTB Precision - No Borders)
+# 2. Styling (USWDS & TTB Precision)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap');
@@ -21,17 +21,15 @@ st.markdown("""
     .stApp { background-color: #f7f7f7; }
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
     
-    /* Global Layout - Removing restricted borders */
+    /* Header/Layout Styling */
     .official-banner { background-color: #f0f0f0; padding: 8px 40px; font-size: 13px; border-bottom: 1px solid #aeb0b5; display: flex; align-items: center; }
     .ttb-header { background-color: #003366; color: white; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; }
     .nav-bar { background-color: #004a80; color: white; padding: 12px 40px; font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-    
     .cbma-banner { background-color: #e7f3ef; border-bottom: 1px solid #aeb0b5; padding: 10px 40px; text-align: center; font-size: 14px; font-weight: bold; }
     .breadcrumbs { background-color: #f0f0f0; padding: 10px 40px; font-size: 13px; font-weight: 700; color: #003366; border-bottom: 1px solid #ddd; }
-    
     .report-fraud-btn { background-color: #2e7d32; color: white !important; padding: 10px 20px; font-weight: 700; border-radius: 4px; text-decoration: none; }
     
-    /* Reset containers to be borderless and flat */
+    /* Reset borders */
     div[data-testid="stVerticalBlockBorderWrapper"] { border: none !important; background-color: transparent !important; }
     h3 { font-size: 1.5rem; color: #003366; font-weight: 700; margin-bottom: 20px; }
     
@@ -41,7 +39,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. Header Construction
+# 3. Header
 st.markdown("""
 <div class="official-banner">
     <img src="https://images.weserv.nl/?url=https://www.cll.com/assets/htmlimages/Version%20of%20the%20American%20Flag.jpg&w=25" style="margin-right: 10px;">
@@ -65,7 +63,7 @@ st.markdown("""
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 4. Form Section
+# 4. Form
 col1, col2 = st.columns([1, 1])
 with col1:
     st.subheader("1. Government Label Data")
@@ -85,12 +83,31 @@ st.markdown("<br>", unsafe_allow_html=True)
 st.subheader("3. Upload Label Artwork")
 uploaded_file = st.file_uploader("Choose a label file", type=["png", "jpg", "jpeg", "svg"], label_visibility="collapsed")
 
-# 5. Audit Execution
+# 5. Audit Execution (Logic Restored)
 if uploaded_file and st.button("Run Automated Compliance Check", type="primary"):
-    with st.spinner("Processing official compliance audit..."):
+    with st.spinner("Executing official TTB regulatory audit..."):
         try:
-            # (Audit logic remains the same)
-            st.success("Audit complete.")
+            if uploaded_file.name.endswith('.svg'):
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".svg") as f:
+                    f.write(uploaded_file.getvalue())
+                drawing = svg2rlg(f.name)
+                png_io = io.BytesIO()
+                renderPM.drawToFile(drawing, png_io, fmt="PNG")
+                img = Image.open(png_io)
+            else:
+                img = Image.open(uploaded_file)
+            
+            extracted_data = analyze_label_image(img)
+            form_data = {"brand_name": app_brand, "fanciful_name": app_fanciful, "class_type": app_type, "abv": app_abv, "net_contents": app_net, "bottler_info": app_bottler, "appellation": app_appellation, "vintage": app_vintage}
+            audit_results = verify_compliance({k: v for k, v in form_data.items() if v.strip() != ""}, extracted_data)
+            
+            st.markdown("### Audit Findings")
+            for element, data in audit_results.items():
+                st.markdown(f"#### {element.replace('_', ' ').title()}")
+                st.write(f"**STATUS:** {data['status']}")
+                c1, c2 = st.columns(2)
+                c1.metric("Expected", data["form"])
+                c2.metric("Extracted", data["label"])
         except Exception as e:
             st.error(f"Audit Error: {e}")
 
