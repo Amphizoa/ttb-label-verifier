@@ -11,7 +11,7 @@ from engine import analyze_label_image, verify_compliance
 # 1. Page Configuration
 st.set_page_config(page_title="TTB Label Compliance Engine", layout="wide")
 
-# 2. Inject Official TTB / USWDS Header & Banner
+# 2. Inject Official TTB Header with the Direct SVG
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
@@ -31,7 +31,10 @@ st.markdown("""
 </div>
 
 <div style='background-color: #005ea2; color: #ffffff; padding: 25px 20px; border-bottom: 4px solid #1a1a1a; display: flex; align-items: center;'>
-    <img src="https://www.ttb.gov/images/ttb-logo.png" alt="TTB Logo" style="height: 60px; margin-right: 20px;">
+    <img src="https://www.ttb.gov/themes/custom/ttb/assets/img/TTB_logo_web.svg" 
+         alt="TTB Logo" 
+         referrerpolicy="no-referrer"
+         style="height: 60px; margin-right: 20px; background: white; padding: 5px; border-radius: 2px;">
     <div>
         <h1 style='margin:0; font-size: 28px; font-weight: 700;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
         <p style='margin:0; font-size: 16px; margin-top: 5px; color: #ffffff;'>COLA Compliance Discrepancy Detection Engine</p>
