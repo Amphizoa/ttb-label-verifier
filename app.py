@@ -15,13 +15,8 @@ st.set_page_config(page_title="TTB Label Compliance Engine", layout="wide")
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
-    
-    .stApp { background-color: #f0f0f0; } /* Federal gray background */
-    
-    /* Official USWDS Typography */
+    .stApp { background-color: #f0f0f0; }
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
-    
-    /* TTB Style Containers */
     div[data-testid="stVerticalBlockBorderWrapper"] { 
         border-radius: 0px !important; 
         border: 1px solid #aeb0b5 !important; 
@@ -30,14 +25,17 @@ st.markdown("""
     }
 </style>
 
-<div style='background-color: #f0f0f0; color: #1b1b1b; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #aeb0b5;'>
-    <img src="https://www.usa.gov/sites/usa/themes/uswds/dist/img/favicon-57.png" width="20" style="margin-right: 5px;">
-    An official website of the <strong>United States government</strong>
+<div style='background-color: #f0f0f0; color: #1b1b1b; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #aeb0b5; display: flex; align-items: center;'>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/US-Gov-Flag.svg" width="20" style="margin-right: 10px;" alt="US Flag">
+    <span>An official website of the <strong>United States government</strong></span>
 </div>
 
-<div style='background-color: #005ea2; color: #ffffff; padding: 30px 20px; border-bottom: 4px solid #1a1a1a;'>
-    <h1 style='margin:0; font-size: 32px; font-weight: 700;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
-    <p style='margin:0; font-size: 18px; margin-top: 5px; color: #d1d1d1;'>COLA Compliance Discrepancy Detection Engine</p>
+<div style='background-color: #005ea2; color: #ffffff; padding: 25px 20px; border-bottom: 4px solid #1a1a1a; display: flex; align-items: center;'>
+    <img src="https://www.ttb.gov/images/ttb-logo.png" alt="TTB Logo" style="height: 60px; margin-right: 20px;">
+    <div>
+        <h1 style='margin:0; font-size: 28px; font-weight: 700;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
+        <p style='margin:0; font-size: 16px; margin-top: 5px; color: #ffffff;'>COLA Compliance Discrepancy Detection Engine</p>
+    </div>
 </div>
 
 <div style='background-color: #fac22b; color: #1a1a1a; padding: 10px 20px; font-size: 14px; font-weight: bold; text-align: center; border-bottom: 2px solid #1a1a1a;'>
