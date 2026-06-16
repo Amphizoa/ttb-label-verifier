@@ -32,14 +32,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 4. Header Section
+# 4. Header Section (Using Proxy for Reliable Rendering)
 st.markdown("""
 <div class="official-banner">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/25px-Flag_of_the_United_States.svg.png" style="margin-right: 10px;">
+    <img src="https://images.weserv.nl/?url=https://www.cll.com/assets/htmlimages/Version%20of%20the%20American%20Flag.jpg&w=25" style="margin-right: 10px;">
     An official website of the United States government
 </div>
 <div class="ttb-header">
-    <img src="https://www.ttb.gov/themes/custom/ttb/assets/img/TTB_logo_web.svg" width="300">
+    <img src="https://images.weserv.nl/?url=https://www.ttb.gov/themes/custom/ttb/assets/img/TTB_logo_web.svg&w=300" alt="TTB Logo">
     <a href="#" class="report-fraud-btn">Report Fraud: TTB Tips Online</a>
 </div>
 <div class="nav-bar">
