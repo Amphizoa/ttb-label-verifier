@@ -27,7 +27,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. Header Section (Using provided custom flag)
+# 3. Header Section
 st.markdown("""
 <div class="official-banner">
     <img src="https://i.imgur.com/kS9Z0aY.png" width="25" style="margin-right: 10px;">
@@ -99,4 +99,14 @@ st.markdown("""
 <div class="ttb-footer">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg/100px-US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg.png" width="80" style="margin-bottom: 20px;">
     <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 40px; text-align: left; max-width: 1000px; margin: 0 auto;">
-        <div><strong>Filing & Payments</strong><br>Permits Online<br>COLAs Online<br>
+        <div><strong>Filing & Payments</strong><br>Permits Online<br>COLAs Online<br>Tax Returns</div>
+        <div><strong>About TTB</strong><br>Contact Us<br>Offices<br>Careers</div>
+        <div><strong>Additional Information</strong><br>Open Government<br>Plain Language</div>
+        <div><strong>Additional Resources</strong><br>FOIA<br>Report Fraud</div>
+        <div><strong>Other Govt Sites</strong><br>Treasury.gov<br>USA.gov</div>
+        <div><strong>Language Links</strong><br>En Español<br>Français</div>
+    </div>
+    <hr style="border: 0.5px solid #005ea2; margin: 30px auto; max-width: 1000px;">
+    <div>Accessibility  |  Privacy Policy</div>
+</div>
+""", unsafe_allow_html=True)
