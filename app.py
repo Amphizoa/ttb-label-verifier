@@ -5,53 +5,53 @@ import tempfile
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 
-# Import the logic engine
+# Import your engine
 from engine import analyze_label_image, verify_compliance
 
 # 1. Page Configuration
-st.set_page_config(page_title="TTB Label Compliance Engine", layout="wide")
+st.set_page_config(page_title="TTB Compliance Portal", layout="wide")
 
-# 2. Inject Official TTB Header with the Official Seal
+# 2. TTB-Specific Branding & Layout CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
-    .stApp { background-color: #f0f0f0; }
+    
+    /* Global Styles */
+    .stApp { background-color: #f7f7f7; }
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
-    div[data-testid="stVerticalBlockBorderWrapper"] { 
-        border-radius: 0px !important; 
-        border: 1px solid #aeb0b5 !important; 
-        background-color: #ffffff;
-        padding: 20px;
-    }
+    
+    /* Branding Elements */
+    .official-banner { background-color: #f0f0f0; color: #1b1b1b; padding: 5px 20px; font-size: 12px; border-bottom: 1px solid #aeb0b5; }
+    .ttb-header { background-color: #003366; color: white; padding: 20px; display: flex; align-items: center; }
+    .nav-bar { background-color: #004a80; color: white; padding: 10px 20px; font-weight: bold; font-size: 14px; }
+    .ttb-footer { background-color: #003366; color: white; padding: 40px 20px; margin-top: 50px; border-top: 5px solid #005ea2; font-size: 14px; }
+    
+    /* Form Containers */
+    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; border: 1px solid #aeb0b5 !important; background-color: #ffffff; padding: 10px; }
 </style>
+""", unsafe_allow_html=True)
 
-<div style='background-color: #f0f0f0; color: #1b1b1b; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #aeb0b5; display: flex; align-items: center;'>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/US-Gov-Flag.svg" width="20" style="margin-right: 10px;" alt="US Flag">
-    <span>An official website of the <strong>United States government</strong></span>
+# 3. Header Section
+st.markdown("""
+<div class="official-banner">
+    🇺🇸 An official website of the United States government
 </div>
-
-<div style='background-color: #005ea2; color: #ffffff; padding: 20px; border-bottom: 4px solid #1a1a1a; display: flex; align-items: center;'>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg/250px-US-AlcoholAndTobaccoTaxAndTradeBureau-Seal.svg.png" 
-         alt="TTB Official Seal" 
-         style="height: 70px; margin-right: 20px; background-color: white; padding: 5px; border-radius: 50%; border: 2px solid #ffffff;">
-    <div>
-        <h1 style='margin:0; font-size: 26px; font-weight: 700;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
-        <p style='margin:0; font-size: 15px; margin-top: 5px; color: #ffffff; opacity: 0.9;'>COLA Compliance Discrepancy Detection Engine</p>
-    </div>
+<div class="ttb-header">
+    <img src="https://www.ttb.gov/themes/custom/ttb/assets/img/TTB_logo_web.svg" width="300">
 </div>
-
-<div style='background-color: #fac22b; color: #1a1a1a; padding: 10px 20px; font-size: 14px; font-weight: bold; text-align: center; border-bottom: 2px solid #1a1a1a;'>
-    DEMONSTRATION PROTOTYPE: Built for technical assessment. Not an official TTB tool.
+<div class="nav-bar">
+    WHO WE ARE ▾  |  WHAT WE DO ▾  |  TTB AUDIENCES ▾  |  RESOURCES ▾
 </div>
 """, unsafe_allow_html=True)
 
-# 3. Layout: Two-Column Form
-col1, col2 = st.columns([1, 1]) 
+st.markdown("<br>", unsafe_allow_html=True)
+
+# 4. Main Application Form
+col1, col2 = st.columns([1, 1])
 
 with col1:
     with st.container(border=True):
         st.markdown("### 1. Government Label Data")
-        st.info("Enter the application data exactly as submitted in your COLA application.")
         app_brand = st.text_input("Brand Name")
         app_type = st.text_input("Class/Type Designation")
         app_bottler = st.text_input("Bottler/Importer Address")
@@ -60,25 +60,16 @@ with col1:
 with col2:
     with st.container(border=True):
         st.markdown("### 2. Supplementary Data")
-        st.info("Ensure all wine-specific details match the submitted documentation.")
         app_abv = st.text_input("Alcohol Content (ABV)")
         app_net = st.text_input("Net Contents")
         app_vintage = st.text_input("Vintage Date (Optional)")
         app_appellation = st.text_input("Appellation of Origin")
 
-st.markdown("---")
+st.markdown("<br>", unsafe_allow_html=True)
 st.subheader("3. Upload Label Artwork")
-st.info("Upload the primary label artwork for the automated audit.")
 uploaded_file = st.file_uploader("Choose a label file", type=["png", "jpg", "jpeg", "svg"])
 
-if uploaded_file:
-    if uploaded_file.name.endswith('.svg'):
-        svg_string = uploaded_file.getvalue().decode("utf-8")
-        st.markdown(svg_string, unsafe_allow_html=True)
-    else:
-        st.image(uploaded_file, use_container_width=True)
-
-# 4. Audit Execution
+# 5. Audit Logic
 if uploaded_file and st.button("Run Automated Compliance Check", type="primary"):
     with st.spinner("Executing TTB regulatory audit..."):
         try:
@@ -93,15 +84,9 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
                 img = Image.open(uploaded_file)
             
             extracted_data = analyze_label_image(img)
-            form_data = {
-                "brand_name": app_brand, "fanciful_name": app_fanciful, 
-                "class_type": app_type, "abv": app_abv, "net_contents": app_net,
-                "bottler_info": app_bottler, "appellation": app_appellation, "vintage": app_vintage
-            }
+            form_data = {"brand_name": app_brand, "fanciful_name": app_fanciful, "class_type": app_type, "abv": app_abv, "net_contents": app_net, "bottler_info": app_bottler, "appellation": app_appellation, "vintage": app_vintage}
             audit_results = verify_compliance({k: v for k, v in form_data.items() if v.strip() != ""}, extracted_data)
             
-            st.markdown("---")
-            st.markdown("### Audit Findings")
             for element, data in audit_results.items():
                 with st.container(border=True):
                     st.markdown(f"#### {element.replace('_', ' ').title()}")
@@ -111,3 +96,19 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
                     c2.metric("Extracted", data["label"])
         except Exception as e:
             st.error(f"Audit Error: {e}")
+
+# 6. Official Footer
+st.markdown("""
+<div class="ttb-footer">
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px;">
+        <div><strong>Filing & Payments</strong><br>Permits Online<br>COLAs Online<br>Tax Returns</div>
+        <div><strong>About TTB</strong><br>Contact Us<br>Offices<br>Careers</div>
+        <div><strong>Additional Information</strong><br>Open Government<br>Plain Language</div>
+        <div><strong>Additional Resources</strong><br>FOIA<br>Report Fraud</div>
+        <div><strong>Other Govt Sites</strong><br>Treasury.gov<br>USA.gov</div>
+        <div><strong>Language Links</strong><br>En Español<br>Français</div>
+    </div>
+    <hr style="border: 0.5px solid #005ea2; margin: 20px 0;">
+    <div>Accessibility  |  Privacy Policy</div>
+</div>
+""", unsafe_allow_html=True)
