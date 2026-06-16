@@ -9,38 +9,49 @@ from reportlab.graphics import renderPM
 from engine import analyze_label_image, verify_compliance
 
 # 1. Page Configuration
-st.set_page_config(page_title="Compliance Portal (Demo)", layout="wide")
+st.set_page_config(page_title="TTB Label Compliance Engine", layout="wide")
 
-# 2. Inject Official Federal-Style CSS
+# 2. Inject Official TTB / USWDS Header & Banner
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Public+Sans:wght@400;600&display=swap');
-    .stApp { background-color: #f7f7f7; }
-    h1, h2, h3 { font-family: 'Georgia', serif !important; color: #003366 !important; }
+    @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
+    
+    .stApp { background-color: #f0f0f0; } /* Federal gray background */
+    
+    /* Official USWDS Typography */
     html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
+    
+    /* TTB Style Containers */
     div[data-testid="stVerticalBlockBorderWrapper"] { 
         border-radius: 0px !important; 
-        border: 1px solid #c0c0c0 !important; 
+        border: 1px solid #aeb0b5 !important; 
         background-color: #ffffff;
+        padding: 20px;
     }
 </style>
 
-<div style='background-color: #003366; color: #ffffff; padding: 20px; border-bottom: 3px solid #cc0000; display: flex; align-items: center;'>
-    <div style='font-family: Georgia, serif; font-size: 30px; font-weight: bold; border: 2px solid white; padding: 5px 15px; margin-right: 25px;'>FRB</div>
-    <div>
-        <h1 style='margin:0; color: #ffffff !important; font-size: 24px;'>Board of Governors of the Federal Reserve System</h1>
-        <p style='margin:0; font-size: 14px; color: #d1d1d1; margin-top: 5px;'>Compliance & Regulatory Discrepancy Detection Portal</p>
-    </div>
+<div style='background-color: #f0f0f0; color: #1b1b1b; padding: 10px 20px; font-size: 13px; border-bottom: 1px solid #aeb0b5;'>
+    <img src="https://www.usa.gov/sites/usa/themes/uswds/dist/img/favicon-57.png" width="20" style="margin-right: 5px;">
+    An official website of the <strong>United States government</strong>
+</div>
+
+<div style='background-color: #005ea2; color: #ffffff; padding: 30px 20px; border-bottom: 4px solid #1a1a1a;'>
+    <h1 style='margin:0; font-size: 32px; font-weight: 700;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
+    <p style='margin:0; font-size: 18px; margin-top: 5px; color: #d1d1d1;'>COLA Compliance Discrepancy Detection Engine</p>
+</div>
+
+<div style='background-color: #fac22b; color: #1a1a1a; padding: 10px 20px; font-size: 14px; font-weight: bold; text-align: center; border-bottom: 2px solid #1a1a1a;'>
+    DEMONSTRATION PROTOTYPE: Built for technical assessment. Not an official TTB tool.
 </div>
 """, unsafe_allow_html=True)
 
-# 3. Layout: Two-Column Federal Form Grid
+# 3. Layout: Two-Column Form
 col1, col2 = st.columns([1, 1]) 
 
 with col1:
     with st.container(border=True):
-        st.markdown("### 1. Primary Identifiers")
-        st.info("Enter the information exactly as it appears on your official application form.")
+        st.markdown("### 1. Government Label Data")
+        st.info("Enter the application data exactly as submitted in your COLA application.")
         app_brand = st.text_input("Brand Name")
         app_type = st.text_input("Class/Type Designation")
         app_bottler = st.text_input("Bottler/Importer Address")
@@ -49,7 +60,7 @@ with col1:
 with col2:
     with st.container(border=True):
         st.markdown("### 2. Supplementary Data")
-        st.info("Include all auxiliary label details required for specific commodity compliance.")
+        st.info("Ensure all wine-specific details match the submitted documentation.")
         app_abv = st.text_input("Alcohol Content (ABV)")
         app_net = st.text_input("Net Contents")
         app_vintage = st.text_input("Vintage Date (Optional)")
@@ -57,8 +68,8 @@ with col2:
 
 st.markdown("---")
 st.subheader("3. Upload Label Artwork")
-st.info("Upload the high-resolution label file (PNG, JPG, or SVG) that corresponds to the data entered above.")
-uploaded_file = st.file_uploader("Choose a label image", type=["png", "jpg", "jpeg", "svg"])
+st.info("Upload the primary label artwork for the automated audit.")
+uploaded_file = st.file_uploader("Choose a label file", type=["png", "jpg", "jpeg", "svg"])
 
 if uploaded_file:
     if uploaded_file.name.endswith('.svg'):
@@ -69,9 +80,8 @@ if uploaded_file:
 
 # 4. Audit Execution
 if uploaded_file and st.button("Run Automated Compliance Check", type="primary"):
-    with st.spinner("Processing official compliance audit..."):
+    with st.spinner("Executing TTB regulatory audit..."):
         try:
-            # SVG Parsing
             if uploaded_file.name.endswith('.svg'):
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".svg") as f:
                     f.write(uploaded_file.getvalue())
@@ -82,7 +92,6 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
             else:
                 img = Image.open(uploaded_file)
             
-            # AI Logic
             extracted_data = analyze_label_image(img)
             form_data = {
                 "brand_name": app_brand, "fanciful_name": app_fanciful, 
@@ -91,10 +100,8 @@ if uploaded_file and st.button("Run Automated Compliance Check", type="primary")
             }
             audit_results = verify_compliance({k: v for k, v in form_data.items() if v.strip() != ""}, extracted_data)
             
-            # Result Display
             st.markdown("---")
             st.markdown("### Audit Findings")
-            st.info("Verified against 27 CFR Part 4 regulatory requirements.")
             for element, data in audit_results.items():
                 with st.container(border=True):
                     st.markdown(f"#### {element.replace('_', ' ').title()}")
