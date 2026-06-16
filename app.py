@@ -8,13 +8,26 @@ from reportlab.graphics import renderPM
 # Import the brains we built in Phase 2
 from engine import analyze_label_image, verify_compliance
 
-# 1. Page Configuration
-st.set_page_config(page_title="Alcohol Label Verifier", layout="wide")
+# 1. Page Configuration (Must be the first Streamlit command)
+st.set_page_config(page_title="TTB Label Verifier (Demo)", layout="wide")
 
-# Main Header
-st.title("Alcohol Label Verifier")
-st.markdown("Automated discrepancy detection between application records and bottle labels.")
-st.write("") 
+# 2. Inject Official Government Header & Test Disclaimer
+st.markdown("""
+    <style>
+        /* Force square corners on all standard Streamlit containers for a rigid look */
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            border-radius: 0px !important;
+        }
+    </style>
+    
+    <div style='background-color: #fac22b; color: #1b1b1b; padding: 10px 20px; font-size: 14px; font-family: sans-serif; font-weight: bold; text-align: center; border-bottom: 2px solid #1a1a1a;'>
+        DEMONSTRATION PROTOTYPE: Built solely for technical interview assessment. Not an official government tool.
+    </div>
+    <div style='background-color: #005ea2; color: #ffffff; padding: 25px 20px; margin-bottom: 25px; border-bottom: 4px solid #1a1a1a;'>
+        <h1 style='margin:0; color: #ffffff; font-size: 28px; font-family: sans-serif;'>Alcohol and Tobacco Tax and Trade Bureau</h1>
+        <p style='margin:0; font-size: 16px; color: #e1f3f8; margin-top: 5px;'>Automated COLA Discrepancy Detection Engine (Technical Demo)</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # 2. Layout: Split Screen with Material-style "Cards"
 col1, col2 = st.columns([1, 1.5]) 
