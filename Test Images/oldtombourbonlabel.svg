@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <rect width="100%" height="100%" fill="#FDF8EE" rx="10" ry="10"/>
+  <rect x="15" y="15" width="370" height="470" fill="none" stroke="#2C1D11" stroke-width="3" rx="5" ry="5"/>
+  <rect x="25" y="25" width="350" height="450" fill="none" stroke="#2C1D11" stroke-width="1" rx="2" ry="2"/>
+  
+  <text x="200" y="100" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#2C1D11" text-anchor="middle" letter-spacing="2">OLD TOM</text>
+  <text x="200" y="130" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#2C1D11" text-anchor="middle" letter-spacing="4">DISTILLERY</text>
+  
+  <text x="200" y="200" font-family="Brush Script MT, cursive" font-size="34" fill="#8B0000" text-anchor="middle">Midnight Reserve</text>
+  
+  <text x="200" y="260" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2C1D11" text-anchor="middle" letter-spacing="1">KENTUCKY STRAIGHT</text>
+  <text x="200" y="285" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2C1D11" text-anchor="middle" letter-spacing="1">BOURBON WHISKEY</text>
+  
+  <line x1="100" y1="330" x2="300" y2="330" stroke="#2C1D11" stroke-width="2"/>
+  
+  <text x="100" y="370" font-family="Arial, sans-serif" font-size="14" fill="#2C1D11" text-anchor="middle">45% Alc./Vol.</text>
+  <text x="300" y="370" font-family="Arial, sans-serif" font-size="14" fill="#2C1D11" text-anchor="middle">750 mL</text>
+  
+  <text x="200" y="420" font-family="Arial, sans-serif" font-size="10" fill="#2C1D11" text-anchor="middle">DISTILLED AND BOTTLED BY</text>
+  <text x="200" y="440" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#2C1D11" text-anchor="middle">OLD TOM DISTILLERY, FRANKFORT, KY</text>
+</svg>
