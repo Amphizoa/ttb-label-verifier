@@ -1,66 +1,92 @@
 # Alcohol Label Verifier (TTB Compliance Engine)
 
-**Live Demo:** [[Insert Your Streamlit App URL Here]](https://ttb-label-verifier-6kmsnf96euzsrakkxksvag.streamlit.app/)
+**Live Demo:** https://ttb-label-verifier-6kmsnf96euzsrakkxksvag.streamlit.app/]
 
-## Overview
-The Alcohol Label Verifier is a prototype automated compliance engine designed to detect discrepancies between official government application data (COLA) and actual physical bottle label artwork. 
+## 1. Project Overview
+The Alcohol Label Verifier is an automated compliance engine designed to modernize the TTB (Alcohol and Tobacco Tax and Trade Bureau) COLA (Certification/Exemption of Label/Bottle Approval) review process. 
 
-Built with a focus on speed and accuracy, this tool leverages multimodal large language models to instantly extract text, classify parameters, and cross-reference government application data against uploaded packaging images.
+By leveraging multimodal Large Language Models (LLMs) and fuzzy string matching, this prototype detects discrepancies between official government application data and actual physical bottle label artwork. It reduces manual review times, mitigates human error, and accelerates time-to-market for alcohol producers by providing instantaneous, confidence-scored audits of mandatory labeling requirements (e.g., ABV, Net Contents, Bottler Information, and Surgeon General Warnings).
 
-## Features
-* **Automated Discrepancy Detection:** Instantly cross-references form inputs (Brand, ABV, Net Contents, Class) against visual label elements.
-* **High-Speed Processing:** Optimized to return audit results in under 5 seconds to meet strict operational workflow requirements.
-* **Modern Interface:** A clean, Material-inspired UI built with Streamlit for intuitive application data entry and image uploading.
-* **Confidence Scoring:** Outputs pass/fail/review statuses alongside the expected versus extracted data for rapid human-in-the-loop verification.
+## 2. Core Architecture & Data Flow
 
-## Technology Stack
-* **Frontend/Deployment:** Streamlit & Streamlit Community Cloud
-* **AI/Computer Vision:** Google Gemini 2.5 Flash API (`google-genai`)
-* **Image Processing:** Pillow (PIL)
+The application executes a four-step pipeline to evaluate compliance:
+
+1. **Data Ingestion:** The user inputs baseline COLA application data via a structured Streamlit form and uploads high-resolution label artwork (PNG, JPG, or SVG).
+2. **Vector Graphic Pre-Processing:** If vector artwork (.svg) is uploaded, a pure-Python conversion pipeline intercepts the file. Utilizing a system-level Cairo backend, the vector is safely rasterized into an in-memory PNG to prevent text degradation and bypass standard PIL compatibility issues.
+3. **Multimodal Extraction:** The rasterized image and a strict extraction prompt are sent to the Google Gemini API. The AI engine utilizes `pydantic` schemas to guarantee the return payload is formatted as strict, parseable JSON containing the exact fields required by the compliance engine.
+4. **Fuzzy Logic Evaluation:** The `verify_compliance` engine cross-references the user's expected data against the AI's extracted data. It utilizes Levenshtein distance to calculate a similarity score, allowing the system to gracefully handle minor OCR errors or formatting differences.
+
+---
+
+## 3. Codebase Walkthrough
+
+To ensure maintainability, the application logic is decoupled into two primary files: the frontend interface (`app.py`) and the artificial intelligence backend (`engine.py`).
+
+### Frontend Implementation (`app.py`)
+Built with Streamlit, the frontend operates on a reactive, two-column layout. 
+* **State Management:** The application relies on Streamlit's native top-down execution flow. Form inputs are bound to variables that are conditionally bundled into a dictionary (`form_data`) only when the primary execution button is triggered.
+* **Empty Field Filtering:** Before sending the expected data to the engine, dictionary comprehension (`{k: v for k, v in form_data.items() if v.strip() != ""}`) strips out any optional fields the user left blank. This prevents the UI from cluttering the results screen with blank comparisons.
+* **Conditional UI Rendering:** To bypass `Pillow`'s inability to render SVG XML natively, the app inspects the `uploaded_file.name`. If the file is an SVG, the UI decodes the byte stream into utf-8 and injects it directly into the DOM using `st.markdown(unsafe_allow_html=True)`.
+
+### Intelligence Backend (`engine.py`)
+This file orchestrates the Google Gemini LLM and the scoring algorithm.
+* **Strict JSON Enforcement:** The `LabelData` class inherits from Pydantic's `BaseModel`. This is passed directly into the Gemini API's `response_schema` parameter. This forces the LLM to abandon standard prose generation and return an exact, predictable JSON object, preventing parsing errors.
+* **Levenshtein Distance Scoring:** The `verify_compliance` function iterates over the expected keys and uses `thefuzz.token_sort_ratio()`. This specific algorithm tokenizes strings, sorts them alphabetically, and compares them. This ensures that "Old Tom Distillery, Frankfort KY" and "Frankfort KY, Old Tom Distillery" evaluate to a nearly 100% match, whereas strict string comparison would fail them entirely.
+
+---
+
+## 4. Technology Stack & Dependencies
+
+* **Frontend Framework:** Streamlit (Python)
+* **AI/Reasoning Engine:** Google Gemini 2.5 Flash (`google-genai`)
+* **Structured Data:** `pydantic`
 * **Logic/Fuzzy Matching:** `thefuzz`
+* **Image Processing:** `Pillow` (PIL)
+* **SVG Processing:** `svglib`, `reportlab`, `rlPyCairo`
 
 ---
 
-## Architectural Decisions & Engineering Trade-offs
+## 5. Engineering Trade-offs & Design Decisions
 
-During the development of this prototype, several key architectural decisions were made to balance accuracy, latency, and reliability:
+### Confidence Scoring vs. Binary Pass/Fail
+Instead of a strict binary evaluation, the system implements a tiered confidence scoring mechanism:
+* **PASS (> 90% Match):** Safe for automated approval.
+* **REVIEW (60% - 89% Match):** Flags minor discrepancies (e.g., missing commas, slight abbreviation differences) for human-in-the-loop verification.
+* **FAIL (< 60% Match):** High probability of a compliance violation or missing mandatory field.
 
-### 1. Model Selection & Quota Management
-While frontier reasoning models (like Gemini 3.1 Pro Preview) offer enhanced zero-shot accuracy, I explicitly architected this prototype utilizing **Gemini 2.5 Flash**. 
-* **Latency Requirement:** The Flash architecture guarantees we meet the strict < 5-second latency requirement for end-users, whereas heavier models frequently exceed this threshold.
-* **Rate Limiting:** Using Flash bypasses the strict rate-limiting (HTTP 429 Resource Exhausted) associated with free-tier Pro models, ensuring high availability during the review process.
+### API Quota Management & Latency
+While frontier reasoning models offer enhanced zero-shot accuracy, I explicitly architected this prototype utilizing **Gemini 2.5 Flash**. The Flash architecture guarantees we meet the strict < 5-second latency requirement for end-users and bypasses aggressive rate-limiting associated with free-tier Pro models.
 
-### 2. Handling API Limits & Resiliency
-As a cloud-dependent prototype using a free-tier LLM API, occasional `503 Service Unavailable` errors may occur during unexpected traffic spikes on Google's servers. 
-* *Future Production Enhancement:* In a production deployment, I would implement an **Exponential Backoff** retry mechanism (utilizing a library such as `tenacity`) around the API call block. This would automatically re-attempt the API call in the background, masking transient network or server errors from the compliance agent interacting with the UI.
+### Graceful Failure Handling
+The AI extraction engine utilizes safe `.get()` dictionary methods with explicit "Not Found" fallbacks (`extracted_data.get(key, "Not Found")`). This prevents application crashes (KeyErrors) if the LLM completely fails to identify a required field on highly complex or visually noisy label artwork.
 
 ---
 
-## Running the Application Locally
+## 6. Local Setup & Installation Guide
 
 ### Prerequisites
 * Python 3.9+
 * A Google Gemini API Key
+* **System Graphics Drivers:** If testing SVG files locally, you must have Cairo installed on your machine (e.g., `brew install cairo` for macOS, `sudo apt-get install libcairo2-dev` for Ubuntu).
 
-### Installation & Execution
-
-Run the following commands in your terminal to clone the repository, set up your environment, inject your API key, and launch the application:
+### Execution Steps
+Run the following commands in your terminal to initialize the project:
 
 ```bash
-# 1. Clone the repository and navigate into it
+# 1. Clone the repository
 git clone [https://github.com/Amphizoa/ttb-label-verifier.git](https://github.com/Amphizoa/ttb-label-verifier.git)
 cd ttb-label-verifier
 
 # 2. Create and activate a virtual environment
 python3 -m venv venv
-source venv/bin/activate  # Note: On Windows, use `venv\Scripts\activate`
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# 3. Install dependencies
+# 3. Install Python dependencies
 pip install -r requirements.txt
 
-# 4. Configure your API Key
+# 4. Configure your API Key securely
 mkdir -p .streamlit
 echo 'GEMINI_API_KEY = "your_actual_api_key_here"' > .streamlit/secrets.toml
 
-# 5. Run the application
+# 5. Launch the local server
 streamlit run app.py
