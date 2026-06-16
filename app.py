@@ -11,16 +11,12 @@ from engine import analyze_label_image, verify_compliance
 # 1. Page Configuration
 st.set_page_config(page_title="TTB Label Verifier (Demo)", layout="wide")
 
-# 2. Inject Official Government Header, Logos & Test Disclaimer
+# 2. Inject Official Government Header & Test Disclaimer
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
-    html, body, [class*="css"] {
-        font-family: 'Public Sans', sans-serif !important;
-    }
-    div[data-testid="stVerticalBlockBorderWrapper"] {
-        border-radius: 0px !important;
-    }
+    html, body, [class*="css"] { font-family: 'Public Sans', sans-serif !important; }
+    div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 0px !important; }
 </style>
 
 <div style='background-color: #f0f0f0; color: #1b1b1b; padding: 4px 20px; font-size: 12px; display: flex; align-items: center; border-bottom: 1px solid #dfe1e2;'>
@@ -79,4 +75,32 @@ with col2:
     with st.container(border=True):
         st.subheader("3. Automated Verification Audit")
         if uploaded_file and st.button("Run Automated Compliance Check", type="primary", use_container_width=True):
-            with st
+            with st.spinner("Analyzing..."):
+                try:
+                    if uploaded_file.name.endswith('.svg'):
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".svg") as f:
+                            f.write(uploaded_file.getvalue())
+                            drawing = svg2rlg(f.name)
+                            png_io = io.BytesIO()
+                            renderPM.drawToFile(drawing, png_io, fmt="PNG")
+                            img = Image.open(png_io)
+                    else:
+                        img = Image.open(uploaded_file)
+                    
+                    extracted_data = analyze_label_image(img)
+                    form_data = {
+                        "brand_name": app_brand, "fanciful_name": app_fanciful, 
+                        "class_type": app_type, "abv": app_abv, "net_contents": app_net,
+                        "bottler_info": app_bottler, "appellation": app_appellation, "vintage": app_vintage
+                    }
+                    audit_results = verify_compliance({k: v for k, v in form_data.items() if v.strip() != ""}, extracted_data)
+                    
+                    for element, data in audit_results.items():
+                        with st.container(border=True):
+                            st.markdown(f"#### {element.replace('_', ' ').title()}")
+                            st.write(f"**STATUS:** {data['status']} ({data['confidence']})")
+                            c1, c2 = st.columns(2)
+                            c1.metric("Expected", data["form"])
+                            c2.metric("Extracted", data["label"])
+                except Exception as e:
+                    st.error(f"Error: {e}")
